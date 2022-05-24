@@ -1,0 +1,66 @@
+name: Deploy Static Content
+
+on:
+  workflow_call:
+    inputs:
+      subscription:
+        required: true
+        type: string
+      storageName:
+        required: true
+        type: string
+      containerName:
+        required: true
+        type: string
+      src:
+        required: true
+        type: string
+      dest:
+        required: true
+        type: string
+      contentCache:
+        required: true
+        type: string
+    secrets:
+      AZURE_CREDENTIALS:
+        required: true
+  
+############
+# Set Jobs #
+############
+jobs:
+  ##############
+  # Define Job #
+  ##############
+  deploy-static-content:
+    name: ${{ github.repository }}
+    runs-on: ubuntu-latest
+
+    ##############
+    # Load Steps #
+    ##############
+    steps:
+      #################
+      # Checkout Code #
+      #################
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      ###############
+      # Azure Login #
+      ###############
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          allow-no-subscriptions: true
+      
+      ##########
+      # Deploy #
+      ##########
+      - name: Deploy
+        working-directory: .
+        shell: bash
+        run: |
+          az account set --subscription ${{ inputs.subscription }}
+          az storage blob upload --account-name ${{ inputs.storageName }} --file '${{ inputs.src }}' --container-name '${{ inputs.containerName }}' --name '${{ inputs.dest }}' --auth-mode key --content-cache '${{ inputs.contentCache }}'
