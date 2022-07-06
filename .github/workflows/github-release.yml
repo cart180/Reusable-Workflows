@@ -44,7 +44,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ env.new_version }}
+          tag_name: ${{ github.ref }}
           release_name: ${{ env.new_version }}
           body_path: RELEASE.md
           draft: false
