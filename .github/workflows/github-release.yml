@@ -44,11 +44,13 @@ jobs:
         shell: bash
         run: |
           set -u
-          echo "$GITHUB_TOKEN" > .githubtoken
-          unset GITHUB_TOKEN
+          echo "$GH_TOKEN" > .githubtoken
+          unset GH_TOKEN
           gh auth login --with-token < .githubtoken
           rm .githubtoken
           gh release create ${{ env.new_version }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # id: create_release
         # uses: actions/create-release@v1
         # with:
