@@ -41,13 +41,17 @@ jobs:
       # Create GitHub Release #
       #########################
       - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ env.new_version }}
-          body_path: RELEASE.md
-          draft: false
-          prerelease: ${{ contains(env.new_version, 'alpha') || contains(env.new_version, 'beta') }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+          gh release create
+        # id: create_release
+        # uses: actions/create-release@v1
+        # with:
+        #   tag_name: ${{ env.new_version }}
+        #   release_name: ${{ env.new_version }}
+        #   body_path: RELEASE.md
+        #   draft: false
+        #   prerelease: ${{ contains(env.new_version, 'alpha') || contains(env.new_version, 'beta') }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
