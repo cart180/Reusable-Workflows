@@ -44,9 +44,10 @@ jobs:
         shell: bash
         run: |
           gh auth login
+          unset GH_TOKEN
           gh release create ${{ env.new_version }}
         env:
-          GH_TOKEN: $
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # id: create_release
         # uses: actions/create-release@v1
         # with:
